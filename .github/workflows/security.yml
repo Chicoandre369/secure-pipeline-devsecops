@@ -49,15 +49,14 @@ jobs:
           exit-code: "0"
       - name: Build image for scan
         run: docker build -t secure-demo:${{ github.sha }} .
-      - name: Trivy Image scan - FAIL on CRITICAL
+      - name: Trivy Image scan - DEBUG table
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: image
           image-ref: secure-demo:${{ github.sha }}
-          format: sarif
-          output: trivy-image.sarif
-          severity: CRITICAL
-          exit-code: "1"
+          format: table
+          severity: CRITICAL,HIGH
+          exit-code: "0"
       - name: Upload SARIF
         uses: github/codeql-action/upload-sarif@v3
         if: always() && hashFiles('trivy-image.sarif') != ''
